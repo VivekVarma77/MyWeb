@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vivek Varma - //_Hacker_Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Roboto Mono', monospace;
+            background-color: #0d1117;
+            color: #00ff00;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="lime" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-terminal"><polyline points="4 17 10 11 4 5"/><line x1="12" x2="20" y1="17" y2="17"/></svg>'), auto;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .main-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+            opacity: 0;
+            transition: opacity 1s ease-in;
+            visibility: hidden;
+        }
+
+        .main-container.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        #background-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        /* Splash Screen styling */
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #0d1117;
+            color: #00ff00;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            z-index: 999;
+            text-align: center;
+        }
+        
+        #splash-screen.hidden {
+            display: none;
+        }
+        
+        .text-glitch {
+            animation: glitch 1s infinite;
+        }
+
+        @keyframes glitch {
+            0% { text-shadow: 2px 2px #ff00ff, -2px -2px #00ffff; }
+            25% { text-shadow: -2px -2px #ff00ff, 2px 2px #00ffff; }
+            50% { text-shadow: 2px -2px #ff00ff, -2px 2px #00ffff; }
+            75% { text-shadow: -2px 2px #ff00ff, 2px -2px #00ffff; }
+            100% { text-shadow: 2px 2px #ff00ff, -2px -2px #00ffff; }
+        }
+
+        .text-error {
+            color: #ff0000;
+            text-shadow: 0 0 10px #ff0000;
+            animation: error-glitch 0.2s infinite;
+        }
+        
+        @keyframes error-glitch {
+            0% { transform: skewX(10deg); }
+            25% { transform: skewX(-5deg); }
+            50% { transform: skewX(15deg); }
+            75% { transform: skewX(-10deg); }
+            100% { transform: skewX(10deg); }
+        }
+
+        .typewriter-text::after {
+            content: '|';
+            animation: blink-caret 1s infinite;
+        }
+
+        @keyframes blink-caret {
+            from, to { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
+        .terminal-block {
+            background-color: rgba(13, 17, 23, 0.7);
+            border: 1px solid #00ff00;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 0 10px #00ff00;
+        }
+        
+        .profile-photo {
+            border-radius: 9999px;
+            border: 2px solid #00ff00;
+            box-shadow: 0 0 15px #00ff00;
+            transition: all 0.3s ease-in-out;
+            filter: grayscale(100%);
+        }
+
+        .profile-photo:hover {
+            transform: scale(1.05);
+            filter: grayscale(0%);
+            box-shadow: 0 0 25px #00ff00;
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- Background Canvas for the bug animation -->
+    <canvas id="background-canvas"></canvas>
+
+    <!-- Splash Screen -->
+    <div id="splash-screen">
+        <h1 class="text-4xl md:text-6xl font-bold text-glitch text-red-500">DANGER AHEAD</h1>
+        <p class="text-xl md:text-2xl mt-4 text-error" id="hacked-message">Your computer is hacked.</p>
+        <div id="action-buttons" class="mt-8 flex space-x-4">
+            <button id="proceed-button" class="px-6 py-2 border-2 border-lime-400 text-lime-400 font-bold hover:bg-lime-400 hover:text-black transition-colors duration-200">PROCEED</button>
+            <button id="terminate-button" class="px-6 py-2 border-2 border-red-500 text-red-500 font-bold hover:bg-red-500 hover:text-white transition-colors duration-200">TERMINATE</button>
+        </div>
+    </div>
+
+    <!-- Main Content Container -->
+    <div class="main-container">
+        
+        <!-- Header Section -->
+        <header class="text-center py-16 md:py-24">
+            <img src="c:\Users\Admin\OneDrive\Desktop\WhatsApp Image 2025-08-22 at 21.07.22_dd2d3f52.jpg" alt="Vivek Varma" class="profile-photo w-48 h-48 mx-auto mb-6">
+            <h1 class="text-4xl md:text-6xl font-bold text-glitch text-white">VIVEK VARMA</h1>
+            <h2 class="text-xl md:text-2xl text-lime-400 font-medium mt-2">B.Tech CSE Student & Digital Ghost</h2>
+        </header>
+
+        <!-- About Me Section -->
+        <section id="about" class="mb-16">
+            <div class="terminal-block">
+                <div class="text-lg leading-relaxed whitespace-pre-wrap" id="about-text"></div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="mb-16">
+            <h3 class="text-3xl font-bold text-center mb-8">Projects</h3>
+            <div class="space-y-8">
+                <!-- Project Card 1 -->
+                <div class="terminal-block">
+                    <div class="text-lg leading-relaxed whitespace-pre-wrap" id="project-one-text"></div>
+                </div>
+                <!-- Project Card 2 -->
+                <div class="terminal-block">
+                    <div class="text-lg leading-relaxed whitespace-pre-wrap" id="project-two-text"></div>
+                </div>
+                <!-- Project Card 3 -->
+                <div class="terminal-block">
+                    <div class="text-lg leading-relaxed whitespace-pre-wrap" id="project-three-text"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="text-center mb-8">
+            <h3 class="text-3xl font-bold mb-6">Connect</h3>
+            <div class="flex justify-center space-x-6 mb-4">
+                <!-- GitHub -->
+                <a href="https://github.com/VivekVarma77" target="_blank" class="social-link w-10 h-10 flex items-center justify-center rounded-full border-2 border-lime-400 hover:bg-lime-400 transition-colors">
+                    <svg role="img" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 text-lime-400 hover:text-black transition-colors">
+                        <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.73.084-.73 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.4 3-.405 1.02.005 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .32.21.693.825.575C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+                    </svg>
+                </a>
+                <!-- LinkedIn -->
+                <a href="https://www.linkedin.com/in/vivek-varma-malkedkar-3a27b3225/" target="_blank" class="social-link w-10 h-10 flex items-center justify-center rounded-full border-2 border-lime-400 hover:bg-lime-400 transition-colors">
+                    <svg role="img" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 text-lime-400 hover:text-black transition-colors">
+                        <path d="M20.447 20.45h-3.375v-5.22c0-1.24-.5-1.93-1.4-1.93a2.15 2.15 0 0 0-2.062 1.432v5.718h-3.375s.04-9.2 0-10.15h3.375v1.45c.4-.78 1.3-1.85 3-1.85 2.2 0 3.8 1.4 3.8 4.4v6.118zM5.337 7.042c-1 0-1.8-.8-1.8-1.8s.8-1.8 1.8-1.8 1.8.8 1.8 1.8-.8 1.8-1.8 1.8zM7.112 20.45H3.737V8H7.112v12.45z"/>
+                    </svg>
+                </a>
+                <!-- Instagram -->
+                <a href="https://www.instagram.com/rey.vivek/" target="_blank" class="social-link w-10 h-10 flex items-center justify-center rounded-full border-2 border-lime-400 hover:bg-lime-400 transition-colors">
+                    <svg role="img" viewBox="0 0 24 24" class="w-6 h-6 text-lime-400 hover:text-black transition-colors">
+                        <defs>
+                            <linearGradient id="ig-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#fd5;stop-opacity:1" />
+                                <stop offset="30%" style="stop-color:#ff543e;stop-opacity:1" />
+                                <stop offset="60%" style="stop-color:#c837ab;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#5c5ce8;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <rect width="24" height="24" rx="5" fill="url(#ig-gradient)" />
+                        <path fill="#fff" d="M12 4.5a7.5 7.5 0 1 0 0 15 7.5 7.5 0 0 0 0-15zm0 13a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11zm5-7a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                    </svg>
+                </a>
+                <!-- X (Twitter) -->
+                <a href="https://x.com/vivek03varma" target="_blank" class="social-link w-10 h-10 flex items-center justify-center rounded-full border-2 border-lime-400 hover:bg-lime-400 transition-colors">
+                    <svg role="img" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 text-lime-400 hover:text-black transition-colors">
+                        <path d="M18.901 1.144h3.916L14.778 9.94 24 22.846h-8.804l-6.275-8.87L0 22.846h-3.915L9.314 9.387 0 1.144h8.563L13.712 7.828 18.901 1.144zm-2.023 18.337h2.24L7.545 3.399H5.068l11.81 16.082z"/>
+                    </svg>
+                </a>
+            </div>
+            <p class="text-sm text-lime-400 mt-2">vivek37317@gmail.com</p>
+        </section>
+
+        <!-- Footer -->
+        <footer class="text-center text-xs text-lime-400 mt-16">
+            <p>//_ACCESS_GRANTED_</p>
+            <p>//_2025 Vivek Varma. All Rights Not Reserved_</p>
+        </footer>
+    </div>
+    
+    <script>
+        // Data for the terminal-style text
+        const content = {
+            about: `> Initializing about section...
+> Connection established.
+> Fetching data...
+Hello, I am Vivek Varma, a final-year Computer Science Engineering student. My journey has been a deep dive into the digital realm, focusing on developing robust and efficient software. I am skilled in various programming languages and technologies, always eager to tackle complex challenges and create impactful solutions.
+
+> End of file.`,
+            projectOne: `> Compiling Project One...
+> Title: Portfolio Website
+> Status: Live
+> Description: A personal portfolio website showcasing my skills and projects, built to be a digital reflection of my work and a testament to my coding capabilities.
+> Technologies: HTML, CSS, JavaScript, TailwindCSS
+> URL: https://github.com/your-username/project-one`,
+            projectTwo: `> Compiling Project Two...
+> Title: E-commerce Backend
+> Status: Live
+> Description: A robust backend for an e-commerce platform with user authentication, secure payment processing, and a scalable database.
+> Technologies: Node.js, Express, MongoDB
+> URL: https://github.com/your-username/project-two`,
+            projectThree: `> Compiling Project Three...
+> Title: Sentiment Analysis Tool
+> Status: In Development
+> Description: A Python-based machine learning tool that analyzes text data to determine and classify sentiment.
+> Technologies: Python, scikit-learn, NLTK
+> URL: https://github.com/your-username/project-three`,
+        };
+
+        // A flag to ensure animation starts only once
+        let animationStarted = false;
+
+        // Function to simulate typing effect
+        function typeWriter(element, text, speed, callback) {
+            let i = 0;
+            element.textContent = '';
+            const type = () => {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                } else if (callback) {
+                    callback();
+                }
+            };
+            type();
+        }
+
+        // Background bug animation logic
+        const canvas = document.getElementById('background-canvas');
+        const ctx = canvas.getContext('2d');
+        const bugs = [];
+        const numBugs = 100;
+        let bugColor = 'rgba(0, 255, 0, 0.4)';
+
+        function Bug() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.size = Math.random() * 2 + 1;
+            this.speedX = (Math.random() - 0.5) * 1;
+            this.speedY = (Math.random() - 0.5) * 1;
+        }
+
+        Bug.prototype.draw = function() {
+            ctx.fillStyle = bugColor;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+        };
+
+        Bug.prototype.update = function() {
+            this.x += this.speedX;
+            this.y += this.speedY;
+            if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
+            if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
+        };
+
+        function initBugs() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            bugs.length = 0;
+            for (let i = 0; i < numBugs; i++) {
+                bugs.push(new Bug());
+            }
+        }
+
+        function animateBugs() {
+            if (!animationStarted) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < bugs.length; i++) {
+                bugs[i].update();
+                bugs[i].draw();
+            }
+            requestAnimationFrame(animateBugs);
+        }
+
+        // Event listeners for the splash screen buttons
+        document.getElementById('proceed-button').addEventListener('click', () => {
+            const splashScreen = document.getElementById('splash-screen');
+            const mainContainer = document.querySelector('.main-container');
+
+            splashScreen.classList.add('hidden');
+            mainContainer.classList.add('visible');
+
+            // Wait a moment for the content to become visible before starting typing animation
+            setTimeout(() => {
+                typeWriter(document.getElementById('about-text'), content.about, 25);
+                setTimeout(() => {
+                    typeWriter(document.getElementById('project-one-text'), content.projectOne, 25, () => {
+                        typeWriter(document.getElementById('project-two-text'), content.projectTwo, 25, () => {
+                            typeWriter(document.getElementById('project-three-text'), content.projectThree, 25);
+                        });
+                    });
+                }, 200);
+            }, 500);
+        });
+
+        document.getElementById('terminate-button').addEventListener('click', () => {
+            const splashScreen = document.getElementById('splash-screen');
+            splashScreen.innerHTML = `
+                <h1 class="text-4xl md:text-6xl font-bold text-red-500">SESSION TERMINATED</h1>
+                <p class="text-xl md:text-2xl mt-4 text-error">Go back?</p>
+                <button id="go-back-button" class="px-6 py-2 mt-8 border-2 border-lime-400 text-lime-400 font-bold hover:bg-lime-400 hover:text-black transition-colors duration-200">GO BACK</button>
+            `;
+            document.getElementById('go-back-button').addEventListener('click', () => {
+                window.close();
+            });
+        });
+
+        document.addEventListener('click', () => {
+            if (!animationStarted) {
+                animationStarted = true;
+                animateBugs();
+            }
+        });
+
+        // Device type detection for splash screen
+        window.onload = function() {
+            initBugs();
+            const hackedMessageElement = document.getElementById('hacked-message');
+            const deviceType = getDeviceType();
+            hackedMessageElement.textContent = `Your ${deviceType} is hacked.`;
+
+            function getDeviceType() {
+                const userAgent = navigator.userAgent;
+                const screenWidth = window.innerWidth;
+                
+                if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(userAgent)) {
+                    return 'tablet';
+                }
+                if (/Mobile|iP(hone|od)|Android|BlackBerry|IEMobile|Kindle|Silk-L|Opera M(obi|ini)/.test(userAgent) && screenWidth < 768) {
+                    return 'mobile';
+                }
+                if (screenWidth >= 1024) {
+                    return 'computer';
+                }
+                if (screenWidth >= 768) {
+                    return 'tablet';
+                }
+                if (/tv|smarttv|lg|samsung|sony|firetv|roku/i.test(userAgent)) {
+                    return 'TV';
+                }
+                return 'computer';
+            }
+        };
+
+        window.addEventListener('resize', initBugs);
+    </script>
+</body>
+</html>
